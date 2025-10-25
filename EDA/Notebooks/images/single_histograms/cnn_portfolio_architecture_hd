@@ -1,0 +1,26 @@
+digraph {
+	bgcolor=white dpi=300 rankdir=TB size="8,12"
+	A [label="Input Layer
+[batch, lookback, 8 assets × 8 features]
+(e.g. returns, EMA, RSI, etc.)" fillcolor="#e3f2fd" fontsize=18 shape=box style="rounded,filled"]
+	B [label="Unsqueeze
+Add channel: [batch, 1, lookback, 8×8]" fillcolor="#e3f2fd" fontsize=18 shape=box style="rounded,filled"]
+	C [label="Conv2d Layer
+8 filters, kernel=(3,1)
+Output: [batch, 8, lookback, 8×8]" fillcolor="#90caf9" fontsize=18 shape=box style="rounded,filled"]
+	D [label="ReLU Activation
+Non-linearity" fillcolor="#bbdefb" fontsize=18 shape=box style="rounded,filled"]
+	E [label="Flatten Layer
+Output: [batch, flattened_size]" fillcolor="#e3f2fd" fontsize=18 shape=box style="rounded,filled"]
+	F [label="Fully Connected Layer
+Linear: [*, 8 assets]" fillcolor="#90caf9" fontsize=18 shape=box style="rounded,filled"]
+	G [label="Softmax (with Temperature)
+Output: Portfolio Weights
+[batch, 8 assets] (sum=1)" fillcolor="#bbdefb" fontsize=18 shape=box style="rounded,filled"]
+	A -> B [color="#1976D2" penwidth=2]
+	B -> C [color="#1976D2" penwidth=2]
+	C -> D [color="#1976D2" penwidth=2]
+	D -> E [color="#1976D2" penwidth=2]
+	E -> F [color="#1976D2" penwidth=2]
+	F -> G [color="#1976D2" penwidth=2]
+}

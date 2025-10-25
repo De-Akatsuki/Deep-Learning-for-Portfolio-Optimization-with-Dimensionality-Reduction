@@ -1,0 +1,59 @@
+digraph Autoencoder_Architecture {
+	bgcolor="#FFFFFF"
+	dpi=150 rankdir=LR splines=polyline
+	input [label="Input Layer
+(batch, features)
+(e.g., 32, 19)" fillcolor="#FFE066" fontname="Arial Black" fontsize=16 height=1.5 shape=box3d style=filled width=1]
+	subgraph cluster_encoder {
+		color="#4890F0" fontname="Arial Black" fontsize=14 label=Encoder style=dashed
+		enc_linear1 [label="Linear Layer
+19 → 128" fillcolor="#F3B0C3" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		enc_relu1 [label="ReLU Activation" fillcolor="#A5E0FA" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		enc_linear2 [label="Linear Layer
+128 → 64" fillcolor="#F3B0C3" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		enc_relu2 [label="ReLU Activation" fillcolor="#A5E0FA" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		enc_linear3 [label="Linear Layer
+64 → 7 (Latent)" fillcolor="#F3B0C3" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		enc_linear1 -> enc_relu1 [color=black penwidth=2]
+		enc_relu1 -> enc_linear2 [color=black penwidth=2]
+		enc_linear2 -> enc_relu2 [color=black penwidth=2]
+		enc_relu2 -> enc_linear3 [color=black penwidth=2]
+	}
+	latent [label="Latent Space
+(batch, dim)
+(e.g., 32, 7)" fillcolor="#4CAF50" fontcolor=white fontname="Arial Black" fontsize=16 height=1 shape=ellipse style=filled width=1.2]
+	subgraph cluster_decoder {
+		color="#45B39D" fontname="Arial Black" fontsize=14 label=Decoder style=dashed
+		dec_linear1 [label="Linear Layer
+7 → 64" fillcolor="#A5D6A7" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		dec_relu1 [label="ReLU Activation" fillcolor="#C8E6C9" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		dec_linear2 [label="Linear Layer
+64 → 128" fillcolor="#A5D6A7" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		dec_relu2 [label="ReLU Activation" fillcolor="#C8E6C9" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		dec_linear3 [label="Linear Layer
+128 → 19
+(Reconstruction)" fillcolor="#A5D6A7" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		dec_linear1 -> dec_relu1 [color=black penwidth=2]
+		dec_relu1 -> dec_linear2 [color=black penwidth=2]
+		dec_linear2 -> dec_relu2 [color=black penwidth=2]
+		dec_relu2 -> dec_linear3 [color=black penwidth=2]
+	}
+	output [label="Output Layer
+(batch, features)
+(e.g., 32, 19)" fillcolor="#AFE1AF" fontname="Arial Black" fontsize=16 height=1.5 shape=box3d style=filled width=1]
+	input -> enc_linear1 [arrowhead=normal color=black penwidth=3]
+	enc_linear3 -> latent [arrowhead=normal color=black penwidth=3]
+	latent -> dec_linear1 [arrowhead=normal color=black penwidth=3]
+	dec_linear3 -> output [arrowhead=normal color=black penwidth=3]
+	fontsize=20 label="Autoencoder Architecture for Dimensionality Reduction" labeljust=c labelloc=b
+	b1 [label=Input fontname="Arial Black" fontsize=14 pos="0, -1!" shape=plaintext]
+	b2 [label=Encoder fontname="Arial Black" fontsize=14 pos="1, -1!" shape=plaintext]
+	b3 [label=Latent fontname="Arial Black" fontsize=14 pos="2, -1!" shape=plaintext]
+	b4 [label=Decoder fontname="Arial Black" fontsize=14 pos="3, -1!" shape=plaintext]
+	b5 [label=Output fontname="Arial Black" fontsize=14 pos="4, -1!" shape=plaintext]
+	input -> b1 [arrowhead=none style=invis]
+	enc_linear1 -> b2 [arrowhead=none style=invis]
+	latent -> b3 [arrowhead=none style=invis]
+	dec_linear1 -> b4 [arrowhead=none style=invis]
+	output -> b5 [arrowhead=none style=invis]
+}

@@ -1,0 +1,34 @@
+// CNN-LSTM (PCA) Pipeline
+digraph {
+	bgcolor="#F0F8FF" fontname=Helvetica fontsize=14 rankdir=LR
+	A [label="Raw Financial Data
+(Daily ETF Prices, Features)" color="#2E86C1" fillcolor="#D6EAF8" fontname="Helvetica-Bold" fontsize=14 penwidth=2 shape=box style=filled]
+	B [label="Feature Engineering & Cleaning" color="#2E86C1" fillcolor="#D6EAF8" fontname="Helvetica-Bold" fontsize=14 penwidth=2 shape=box style=filled]
+	C [label="PCA
+(Reduce to 7 Components)" color="#2E86C1" fillcolor="#D6EAF8" fontname="Helvetica-Bold" fontsize=14 penwidth=2 shape=box style=filled]
+	D [label="Dynamic Target Generation
+(Risk-Parity Weighted Targets)" color="#2E86C1" fillcolor="#D6EAF8" fontname="Helvetica-Bold" fontsize=14 penwidth=2 shape=box style=filled]
+	E [label="Sequence Preparation
+(Window Size = 30)" color="#2E86C1" fillcolor="#D6EAF8" fontname="Helvetica-Bold" fontsize=14 penwidth=2 shape=box style=filled]
+	F [label="CNN Layer
+(Conv1d 32 filters)" color="#2E86C1" fillcolor="#D6EAF8" fontname="Helvetica-Bold" fontsize=14 penwidth=2 shape=box style=filled]
+	G [label="Max Pooling Layer
+(1D Pooling Kernel=2)" color="#2E86C1" fillcolor="#D6EAF8" fontname="Helvetica-Bold" fontsize=14 penwidth=2 shape=box style=filled]
+	H [label="LSTM Layer
+(Hidden Size = 64)" color="#2E86C1" fillcolor="#D6EAF8" fontname="Helvetica-Bold" fontsize=14 penwidth=2 shape=box style=filled]
+	I [label="Dense Layer & Dropout" color="#2E86C1" fillcolor="#D6EAF8" fontname="Helvetica-Bold" fontsize=14 penwidth=2 shape=box style=filled]
+	J [label="Sharpe Ratio Regression Output" color="#117A65" fillcolor="#D1F2EB" fontname="Helvetica-Bold" fontsize=13 penwidth=2 shape=ellipse style=filled]
+	K [label="Portfolio Weights Output
+(Softmax Normalized)" color="#196F3D" fillcolor="#ABEBC6" fontname="Helvetica-Bold" fontsize=13 penwidth=2 shape=ellipse style=filled]
+	A -> B [label="Load & Clean Raw Data" fontname=Helvetica]
+	B -> C [label="Apply PCA" fontname=Helvetica]
+	C -> E [label="Dimensionality Reduced Features" fontname=Helvetica]
+	D -> E [label="Generate Dynamic Targets" color="#85929E" fontname=Helvetica style=dotted]
+	E -> F [label="Sequence Input
+(batch, seq_len=30, features=7)" fontname=Helvetica]
+	F -> G [fontname=Helvetica]
+	G -> H [fontname=Helvetica]
+	H -> I [fontname=Helvetica]
+	I -> J [label="Sharpe Prediction" color="#117A65" fontname=Helvetica]
+	I -> K [label="Portfolio Weights" color="#196F3D" fontname=Helvetica]
+}

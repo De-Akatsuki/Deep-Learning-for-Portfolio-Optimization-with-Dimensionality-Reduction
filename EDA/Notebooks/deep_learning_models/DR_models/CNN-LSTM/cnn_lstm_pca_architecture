@@ -1,0 +1,33 @@
+digraph {
+	bgcolor=white dpi=300 rankdir=TB size="4,14"
+	A [label="Input Layer
+[batch, window, features]
+(e.g., processed technical, macro features)" fillcolor="#b3d8ff" fontsize=14 shape=box style="rounded,filled"]
+	B [label="Standardization
+Zero mean, unit variance" fillcolor="#b3d8ff" fontsize=14 shape=box style="rounded,filled"]
+	C [label="PCA Transformation
+Dimensionality Reduction
+Output: [batch, window, PCA components]" fillcolor="#b3d8ff" fontsize=14 shape=box style="rounded,filled"]
+	D [label="CNN Layer
+Conv1d, filters=32, kernel=3
+Output: [batch, 32, window]" fillcolor="#3399ff" fontcolor=white fontsize=14 shape=box style="rounded,filled"]
+	E [label="MaxPooling
+kernel=2
+Output: [batch, 32, window//2]" fillcolor="#b3d8ff" fontsize=14 shape=box style="rounded,filled"]
+	F [label="LSTM Layer
+hidden=64, 1-layer
+Output: (batch, 64) (last hidden state)" fillcolor="#3399ff" fontcolor=white fontsize=14 shape=box style="rounded,filled"]
+	G [label="Fully Connected Layer
+Linear: [batch, 64] → [batch, 8 assets]" fillcolor="#3399ff" fontcolor=white fontsize=14 shape=box style="rounded,filled"]
+	H [label="Softmax (with Temperature)
+Portfolio Weights Output
+[batch, 8 assets] (sum=1)" fillcolor="#4caf50" fontcolor=white fontsize=14 shape=box style="rounded,filled"]
+	A -> B [color="#3399ff" penwidth=2]
+	B -> C [color="#3399ff" penwidth=2]
+	C -> D [color="#3399ff" penwidth=2]
+	D -> E [color="#3399ff" penwidth=2]
+	E -> F [color="#3399ff" penwidth=2]
+	F -> G [color="#3399ff" penwidth=2]
+	G -> H [color="#4caf50" penwidth=2]
+	fontsize=20 label="CNN-LSTM Portfolio Model Architecture with PCA" labelloc=t
+}

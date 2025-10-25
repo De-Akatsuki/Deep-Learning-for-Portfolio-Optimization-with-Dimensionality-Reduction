@@ -1,0 +1,41 @@
+digraph {
+	bgcolor=white dpi=300 rankdir=TB size="8,12"
+	A [label="Input Layer
+[batch, lookback, 8 assets × 8 features]
+(e.g. returns, EMA, RSI, etc.)" fillcolor="#e3f2fd" fontsize=16 shape=box style="rounded,filled"]
+	B [label="Standardization
+Zero mean, unit variance" fillcolor="#bbdefb" fontsize=16 shape=box style="rounded,filled"]
+	C [label="PCA Transformation
+Linear dimensionality reduction
+Output: [batch, lookback, k PCA components]" fillcolor="#90caf9" fontsize=16 shape=box style="rounded,filled"]
+	D [label="Autoencoder Encoder
+Nonlinear dimensionality reduction
+Output: [batch, lookback, k AE latent features]" fillcolor="#90caf9" fontsize=16 shape=box style="rounded,filled"]
+	E [label="Concatenate PCA and AE Features
+Output: [batch, lookback, k PCA + k AE features]" fillcolor="#bbdefb" fontsize=16 shape=box style="rounded,filled"]
+	F [label="Unsqueeze
+[batch, 1, lookback, combined features]" fillcolor="#bbdefb" fontsize=16 shape=box style="rounded,filled"]
+	G [label="Conv2d Layer
+8 filters, kernel=(3,1)
+Output: [batch, 8, lookback, combined features]" fillcolor="#42a5f5" fontsize=16 shape=box style="rounded,filled"]
+	H [label="ReLU Activation
+Non-linearity" fillcolor="#1976d2" fontsize=16 shape=box style="rounded,filled"]
+	I [label="Flatten Layer
+Output: [batch, flattened_size]" fillcolor="#bbdefb" fontsize=16 shape=box style="rounded,filled"]
+	J [label="Fully Connected Layer
+Linear: [*, 8 assets]" fillcolor="#1976d2" fontsize=16 shape=box style="rounded,filled"]
+	K [label="Softmax (with Temperature)
+Output: Portfolio Weights
+[batch, 8 assets] (sum=1)" fillcolor="#43a047" fontcolor=white fontname=Helvetica fontsize=18 shape=box style="rounded,filled"]
+	A -> B [color="#1976D2" penwidth=2]
+	B -> C [color="#1976D2" penwidth=2]
+	B -> D [color="#1976D2" penwidth=2]
+	C -> E [color="#1976D2" penwidth=2]
+	D -> E [color="#1976D2" penwidth=2]
+	E -> F [color="#1976D2" penwidth=2]
+	F -> G [color="#1976D2" penwidth=2]
+	G -> H [color="#1976D2" penwidth=2]
+	H -> I [color="#1976D2" penwidth=2]
+	I -> J [color="#1976D2" penwidth=2]
+	J -> K [color="#43a047" penwidth=2]
+}

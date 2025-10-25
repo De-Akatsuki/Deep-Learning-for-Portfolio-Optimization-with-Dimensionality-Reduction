@@ -1,0 +1,61 @@
+digraph {
+	bgcolor=white dpi=300 nodesep=1 rankdir=LR ranksep=1.2 size="20,10" splines=ortho
+	subgraph cluster_ingest {
+		label=Ingestion style=dashed
+		YF [label="yfinance
+(Market Data)" fillcolor="#e3f2fd" shape=rect style="rounded,filled"]
+		FRED [label="FRED
+(Macro Data)" fillcolor="#e3f2fd" shape=rect style="rounded,filled"]
+		TA [label="Technical Analysis
+(Feature Scripts)" fillcolor="#bbdefb" shape=rect style="rounded,filled"]
+		API [label="API
+(Internal/External)" fillcolor="#e3f2fd" shape=rect style="rounded,filled"]
+		RAW [label="Raw Data Lake
+(S3/Blob)" fillcolor="#90caf9" shape=cylinder style=filled]
+		YF -> RAW [label=scrape]
+		FRED -> RAW [label="api call"]
+		API -> RAW [label=push]
+		TA -> RAW [label="feature gen"]
+	}
+	subgraph cluster_warehouse {
+		label=Warehouse style=dashed
+		LOAD [label=Loading fillcolor="#bbdefb" shape=rect style="rounded,filled"]
+		RAW_DB [label=Raw fillcolor="#90caf9" shape=cylinder style=filled]
+		TRANS [label=Transforming fillcolor="#bbdefb" shape=rect style="rounded,filled"]
+		PROD [label=Prod fillcolor="#42a5f5" shape=cylinder style=filled]
+		DR [label="Dimensionality Reduction
+(PCA/Autoencoder)" fillcolor="#90caf9" shape=rect style="rounded,filled"]
+		MODEL [label="Model Training
+(CNN/LSTM)" fillcolor="#43a047" shape=rect style="rounded,filled"]
+		PORTF [label="Portfolio Weights
+& Sharpe Ratio" fillcolor="#fbc02d" shape=ellipse style=filled]
+		RAW -> LOAD
+		LOAD -> RAW_DB
+		RAW_DB -> TRANS
+		TRANS -> PROD
+		PROD -> MODEL [label=Features]
+		PROD -> DR [label=Features]
+		DR -> MODEL [label="Reduced Features"]
+		MODEL -> PORTF
+	}
+	subgraph cluster_reporting {
+		label=Reporting style=dashed
+		BI [label="BI Tools
+(Looker, PowerBI, etc.)" fillcolor="#e3f2fd" shape=rect style="rounded,filled"]
+		REV_ETL [label="Reverse ETL
+(Census, Hightouch)" fillcolor="#e3f2fd" shape=rect style="rounded,filled"]
+		MON [label="Monitoring
+(Monte Carlo, Custom)" fillcolor="#c62828" shape=rect style="rounded,filled"]
+		PORTF -> BI
+		PORTF -> REV_ETL
+		MODEL -> MON [label="Metrics/Logs"]
+	}
+	subgraph cluster_market {
+		label=Marketplace style=dashed
+		MARKET [label="Data Marketplace
+(Snowflake, etc.)" fillcolor="#90caf9" shape=cylinder style=filled]
+		MARKET -> RAW_DB [label="External Data" style=dotted]
+	}
+	MON -> RAW [label="Data Quality Alerts" style=dashed]
+	fontsize=24 label="Portfolio Optimization Data Pipeline: System Architecture" labelloc=t
+}

@@ -1,0 +1,40 @@
+digraph CNN_LSTM_Pipeline {
+	bgcolor="#FFFFFF"
+	dpi=150 rankdir=LR splines=polyline
+	input [label="Input Data
+x1
+x2
+...
+xn" fillcolor="#FFE066" fontname="Arial Black" fontsize=16 height=1.5 shape=box3d style=filled width=1]
+	subgraph cluster_cnn {
+		color="#4890F0" fontname="Arial Black" fontsize=14 label="CNN Layer" style=dashed
+		conv [label="Convolutional
+Layer" fillcolor="#F3B0C3" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		pool [label="Max
+Pooling" fillcolor="#A5E0FA" fontname="Arial Black" fontsize=15 shape=box style=filled]
+		conv -> pool [color=black penwidth=2]
+	}
+	flatten [label=Flatten fillcolor="#FBE5D6" fontname="Arial Black" fontsize=15 shape=parallelogram style="filled,diagonals"]
+	lstm [label="LSTM Layer" fillcolor="#B8FAC7" fontname="Arial Black" fontsize=15 shape=rectangle style="filled,rounded"]
+	dense [label="Dense Layer" fillcolor="#EDA3D6" fontname="Arial Black" fontsize=15 shape=box3d style=filled]
+	output [label=Output fillcolor="#FFE066" fontname="Arial Black" fontsize=16 shape=box3d style=filled]
+	input -> conv [arrowhead=normal color=black penwidth=3]
+	pool -> flatten [arrowhead=normal color=black penwidth=3]
+	flatten -> lstm [arrowhead=normal color=black penwidth=3]
+	lstm -> dense [arrowhead=normal color=black penwidth=3]
+	dense -> output [arrowhead=normal color=black penwidth=3]
+	labeljust=c
+	labelloc=b
+	b1 [label="Input Data" pos="0, -1!" shape=plaintext]
+	b2 [label="CNN Layer" pos="1, -1!" shape=plaintext]
+	b3 [label=Flatten pos="2, -1!" shape=plaintext]
+	b4 [label="LSTM Layer" pos="3, -1!" shape=plaintext]
+	b5 [label="Dense Layer" pos="4, -1!" shape=plaintext]
+	b6 [label=Output pos="5, -1!" shape=plaintext]
+	input -> b1 [arrowhead=none style=invis]
+	conv -> b2 [arrowhead=none style=invis]
+	flatten -> b3 [arrowhead=none style=invis]
+	lstm -> b4 [arrowhead=none style=invis]
+	dense -> b5 [arrowhead=none style=invis]
+	output -> b6 [arrowhead=none style=invis]
+}

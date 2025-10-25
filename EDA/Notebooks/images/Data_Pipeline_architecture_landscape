@@ -1,0 +1,30 @@
+digraph {
+	bgcolor=white dpi=300 rankdir=LR size="16,8"
+	fontsize=20 label="Data Pipeline for Deep Learning Models" labelloc=t
+	Spacer [label="" height=0.4 shape=plaintext width=0]
+	A [label="
+Data Sourcing
+(yfinance library, FRED API)
+         " fillcolor="#b3d8ff" fontsize=14 shape=box style=rounded]
+	B [label="
+EDA 
+(Multi-Variate Analysis, Feature Eng)
+         " fillcolor="#b3d8ff" fontsize=14 shape=box style="rounded,filled"]
+	C [label="
+Dimensionality Reduction
+(PCA & Autoencoders)
+         " fillcolor="#3399ff" fontcolor=white fontsize=14 shape=box style="rounded,filled"]
+	D [label="
+Model Training 
+(CNN-LSTM, Bi-LSTM etc.)
+         " fillcolor="#3399ff" fontcolor=white fontsize=14 shape=box style="rounded,filled"]
+	E [label="
+Softmax (with Temperature)
+Portfolio Weights Output & Sharpe Ratio 
+         " fillcolor="#4caf50" fontcolor=white fontsize=14 shape=box style="rounded,filled"]
+	Spacer -> A [style=invis]
+	A -> B [color="#3399ff" penwidth=2]
+	B -> C [color="#3399ff" penwidth=2]
+	C -> D [color="#3399ff" penwidth=2]
+	D -> E [color="#4caf50" penwidth=2]
+}

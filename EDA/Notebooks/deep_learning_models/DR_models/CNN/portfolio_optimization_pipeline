@@ -1,0 +1,36 @@
+digraph PortfolioOptimizationPipeline {
+	rankdir=LR size="10,5"
+	A [label="1. Data Loading & Preparation
+(Raw ETF & Macro Data)"]
+	B [label="2. Feature Engineering & Scaling
+(StandardScaler)"]
+	C [label="3. PCA
+(Dimensionality Reduction)"]
+	D [label="4. Generate Dynamic Target Weights
+(Momentum-based weights)"]
+	E [label="5. Sequence Creation
+(Prepare CNN Input & Targets)"]
+	F [label="6. Dataset & DataLoader
+(PyTorch)"]
+	G [label="7. CNN Model Training
+(1D CNN for Sharpe & Weights)"]
+	H [label="8. Model Evaluation & Prediction
+(Sharpe & Portfolio Weights)"]
+	I [label="9. Portfolio Construction
+(Apply Predicted Weights)"]
+	J [label="10. Performance Metrics
+(Sharpe, Sortino, Calmar, Turnover, etc.)"]
+	K [label="11. Visualization & Reporting
+(Plots & CSV Outputs)"]
+	A -> B [label="Raw data"]
+	B -> C [label="Scaled features"]
+	C -> E [label="Principal components"]
+	D -> E [label="Target weights"]
+	E -> F [label="Sequences & targets"]
+	F -> G [label="Training batches"]
+	G -> H [label="Trained model"]
+	H -> I [label="Predicted weights & Sharpe"]
+	I -> J [label="Portfolio returns"]
+	J -> K [label="Metrics & plots"]
+	J -> G [label="Model tuning" style=dashed]
+}

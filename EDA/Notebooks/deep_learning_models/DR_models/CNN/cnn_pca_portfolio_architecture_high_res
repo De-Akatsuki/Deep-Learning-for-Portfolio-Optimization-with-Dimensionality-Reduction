@@ -1,0 +1,43 @@
+// CNN-PCA Portfolio Optimization Architecture
+digraph CNN_PCA_Portfolio_Architecture_HighRes {
+	rankdir=TB size="8,10"
+	node [fontname=Helvetica fontsize=10 shape=box style="rounded,filled"]
+	input [label="Input Layer
+[batch, lookback, 8 assets × 8 features]
+(returns, RSI, MACD, etc.)" fillcolor="#e6f2ff"]
+	pca [label="PCA Layer
+[batch, lookback, 5_components]
+(Dimensionality Reduction)" fillcolor="#cce6ff"]
+	conv_input_prep [label="Data Reshape/Permute
+[batch, n_components, lookback]" fillcolor="#e6f2ff"]
+	conv1d_1 [label="Conv1D Layer 1
+filters=64, kernel_size=3
+Output: [batch, 64, (lookback-2)]" fillcolor="#99ccff"]
+	relu1 [label="ReLU Activation" fillcolor="#b3d1ff"]
+	conv1d_2 [label="Conv1D Layer 2
+filters=32, kernel_size=3
+Output: [batch, 32, (lookback-4)]" fillcolor="#66a3ff"]
+	relu2 [label="ReLU Activation" fillcolor="#b3d1ff"]
+	flatten [label="Flatten Layer
+Output: [batch, flattened_size]" fillcolor="#e6f2ff"]
+	dropout [label="Dropout Layer" fillcolor="#e6f2ff"]
+	fc1_hidden [label="Fully Connected Layer 1
+(Hidden: 64 neurons)" fillcolor="#3366ff"]
+	relu3 [label="ReLU Activation" fillcolor="#b3d1ff"]
+	sharpe_output [label="Output: Sharpe Ratio
+[batch, 1] (Linear Activation)" fillcolor="#b2e6b2"]
+	weights_output [label="Output: Portfolio Weights
+[batch, N assets] (Softmax Activation)" fillcolor="#85e085"]
+	input -> pca [label="Raw Features"]
+	pca -> conv_input_prep [label="Principal Components"]
+	conv_input_prep -> conv1d_1
+	conv1d_1 -> relu1
+	relu1 -> conv1d_2
+	conv1d_2 -> relu2
+	relu2 -> flatten
+	flatten -> dropout
+	dropout -> fc1_hidden
+	fc1_hidden -> relu3
+	relu3 -> sharpe_output [label="Regression Head"]
+	relu3 -> weights_output [label="Classification Head"]
+}

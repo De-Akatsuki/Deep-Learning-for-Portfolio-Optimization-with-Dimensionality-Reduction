@@ -1,0 +1,3 @@
+Final Data Shape: (20120, 43)
+Columns: ['Date', 'Ticker', 'Close', 'High', 'Low', 'Open', 'Volume', 'returns', 'EMA_10', 'EMA_50', 'MACD', 'MACD_Signal', 'RSI_14', 'ATR_14', 'Volatility_21', 'OBV', 'Max_Drawdown_21', 'Calmar_Ratio_21', 'Beta', 'Alpha', 'ADX_14', 'DMI_plus_14', 'DMI_minus_14', 'cpi', 'core_cpi', 'pce_price_index', 'real_gdp', 'industrial_production', 'durable_goods_orders', 'unemployment_rate', 'nonfarm_payrolls', 'jobless_claims', 'fed_funds_rate', 'treasury_10y', 'treasury_3m', 'baa_yield', 'aaa_yield', 'consumer_credit', 'mortgage_rate_30y', 'housing_starts', 'building_permits', 'new_home_sales', 'umich_consumer_sentiment']
+Missing Values Handled Successfully

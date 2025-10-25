@@ -1,0 +1,70 @@
+digraph {
+	bgcolor=white dpi=300 nodesep=1 rankdir=TB ranksep=1.2 size="16,20" splines=ortho
+	YF [label="yfinance API
+(Equity/ETF Prices)" fillcolor="#42a5f5" fontsize=16 shape=cylinder style=filled]
+	FRED [label="FRED API
+(Macroeconomic Data)" fillcolor="#42a5f5" fontsize=16 shape=cylinder style=filled]
+	RAW_DB [label="Raw Data Storage" fillcolor="#e3f2fd" fontsize=16 shape=cylinder style=filled]
+	INGEST [label="Data Ingestion
+& Cleaning" fillcolor="#bbdefb" fontsize=16 shape=parallelogram style=filled]
+	TA [label="Technical Analysis
+(e.g., RSI, MACD, ATR)" fillcolor="#90caf9" fontsize=16 shape=box style="rounded,filled"]
+	FE [label="Feature Engineering
+(Derived & Macro Features)" fillcolor="#90caf9" fontsize=16 shape=box style="rounded,filled"]
+	FS [label="Feature Selection" fillcolor="#1976d2" fontsize=16 shape=diamond style=filled]
+	NORM [label="Normalization &
+Standardization" fillcolor="#bbdefb" fontsize=16 shape=box style="rounded,filled"]
+	TRAIN1 [label="Model Training
+(CNN, LSTM, etc.)" fillcolor="#43a047" fontsize=16 shape=component style=filled]
+	OUT1 [label="Portfolio Weights
+& Sharpe Ratio" fillcolor="#fbc02d" fontsize=16 shape=ellipse style=filled]
+	DR [label="Dimensionality Reduction
+(PCA, Autoencoder)" fillcolor="#90caf9" fontsize=16 shape=octagon style=filled]
+	TRAIN2 [label="Model Training
+(CNN, LSTM, etc.)" fillcolor="#43a047" fontsize=16 shape=component style=filled]
+	OUT2 [label="Portfolio Weights
+& Sharpe Ratio" fillcolor="#fbc02d" fontsize=16 shape=ellipse style=filled]
+	PROC_DB [label="Processed Feature Storage" fillcolor="#e3f2fd" fontsize=16 shape=cylinder style=filled]
+	YF -> RAW_DB [label=scrape color="#42a5f5" penwidth=2]
+	FRED -> RAW_DB [label="API call" color="#42a5f5" penwidth=2]
+	RAW_DB -> INGEST [color="#bbdefb" penwidth=2]
+	INGEST -> TA [color="#90caf9" penwidth=2]
+	TA -> FE [color="#90caf9" penwidth=2]
+	FE -> FS [color="#1976d2" penwidth=2]
+	FS -> NORM [color="#bbdefb" penwidth=2]
+	NORM -> PROC_DB [color="#bbdefb" penwidth=1 style=dashed]
+	NORM -> TRAIN1 [label="(Full Feature Set)" color="#43a047" penwidth=2]
+	TRAIN1 -> OUT1 [color="#fbc02d" penwidth=2]
+	NORM -> DR [label="(Optional)" color="#90caf9" penwidth=2]
+	DR -> TRAIN2 [label="(Reduced Features)" color="#43a047" penwidth=2]
+	TRAIN2 -> OUT2 [color="#fbc02d" penwidth=2]
+	RESULTS_DB [label="Results Storage
+(Weights, Metrics)" fillcolor="#e3f2fd" fontsize=16 shape=cylinder style=filled]
+	OUT1 -> RESULTS_DB [color="#fbc02d" style=dashed]
+	OUT2 -> RESULTS_DB [color="#fbc02d" style=dashed]
+	subgraph cluster_data {
+		color="#bbdefb" label="Data Sources & Storage" style=dashed
+		YF
+		FRED
+		RAW_DB
+		PROC_DB
+		RESULTS_DB
+	}
+	subgraph cluster_pipeline {
+		color="#90caf9" label="Feature Pipeline" style=dashed
+		INGEST
+		TA
+		FE
+		FS
+		NORM
+		DR
+	}
+	subgraph cluster_models {
+		color="#43a047" label="Model Training & Outputs" style=dashed
+		TRAIN1
+		OUT1
+		TRAIN2
+		OUT2
+	}
+	fontsize=24 label="Comprehensive Data Pipeline for Portfolio Optimization: From Data Acquisition to Model Training and Evaluation" labelloc=t
+}

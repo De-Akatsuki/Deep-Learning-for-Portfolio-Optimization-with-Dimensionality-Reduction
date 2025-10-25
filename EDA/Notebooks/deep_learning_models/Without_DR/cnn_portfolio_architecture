@@ -1,0 +1,22 @@
+digraph {
+	rankdir=TB size="8,10"
+	A [label="Input
+[batch, lookback, n_assets × n_features]" fillcolor="#e3f2fd" shape=box style="rounded,filled"]
+	B [label="Unsqueeze
+Add channel: [batch, 1, lookback, n_assets × n_features]" fillcolor="#e3f2fd" shape=box style="rounded,filled"]
+	C [label="Conv2d
+8 filters, kernel=(3,1)" fillcolor="#90caf9" shape=box style="rounded,filled"]
+	D [label="ReLU
+Activation" fillcolor="#bbdefb" shape=box style="rounded,filled"]
+	E [label=Flatten fillcolor="#e3f2fd" shape=box style="rounded,filled"]
+	F [label="Fully Connected
+Linear: [*, n_assets]" fillcolor="#90caf9" shape=box style="rounded,filled"]
+	G [label="Softmax (with Temperature)
+Portfolio Weights" fillcolor="#bbdefb" shape=box style="rounded,filled"]
+	A -> B
+	B -> C
+	C -> D
+	D -> E
+	E -> F
+	F -> G
+}

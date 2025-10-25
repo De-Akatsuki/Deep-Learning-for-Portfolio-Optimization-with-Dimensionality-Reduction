@@ -1,0 +1,125 @@
+digraph {
+	bgcolor=white dpi=300 nodesep=1 rankdir=TB ranksep=1.5 size="20,30" splines=ortho
+	YF [label="yfinance API
+(Equity/ETF Prices)" fillcolor="#1976d2" fontsize=16 shape=cylinder style=filled]
+	FRED [label="FRED API
+(Macroeconomic Data)" fillcolor="#1976d2" fontsize=16 shape=cylinder style=filled]
+	RAW_DB [label="Raw Data Lake
+(Object Storage)" fillcolor="#90caf9" fontsize=16 shape=cylinder style=filled]
+	ORCH [label="Data Orchestrator
+(Airflow / Prefect)" fillcolor="#42a5f5" fontsize=16 shape=box style="filled,rounded"]
+	CLEAN [label="Data Cleaning & Validation
+(Missing Values, Outliers)" fillcolor="#42a5f5" fontsize=16 shape=box style="filled,rounded"]
+	AUDIT [label="Audit & Logging
+(Error Tracking, Alerts)" fillcolor="#c62828" fontsize=14 shape=note style=filled]
+	TECH_IND [label="Technical Indicators
+(RSI, MACD, ATR, Volatility)" fillcolor="#42a5f5" fontsize=16 shape=box style="filled,rounded"]
+	MACRO_JOIN [label="Macro Data Joiner
+(Lagged Features, Alignment)" fillcolor="#42a5f5" fontsize=16 shape=box style="filled,rounded"]
+	FEAT_STORE [label="Feature Store
+(Versioned, Metadata)" fillcolor="#90caf9" fontsize=16 shape=cylinder style=filled]
+	FEAT_SEL [label="Feature Selection
+(Statistical & Model-based)" fillcolor="#fbc02d" fontsize=16 shape=diamond style=filled]
+	SCALE [label="Normalization & Standardization" fillcolor="#42a5f5" fontsize=16 shape=box style="filled,rounded"]
+	PCA [label="PCA
+(Linear Dimensionality Reduction)" fillcolor="#42a5f5" fontsize=16 shape=octagon style=filled]
+	AE [label="Autoencoder
+(Nonlinear Dimensionality Reduction)" fillcolor="#42a5f5" fontsize=16 shape=octagon style=filled]
+	HYBRID_FEAT [label="Concatenate PCA + AE Features" fillcolor="#42a5f5" fontsize=16 shape=box style="filled,rounded"]
+	MODEL_REG [label="Model Registry
+(Versioning & Metadata)" fillcolor="#90caf9" fontsize=16 shape=cylinder style=filled]
+	TRAIN_ENG [label="Training Engine
+(CNN, LSTM, Hybrid Models)" fillcolor="#43a047" fontsize=16 shape=component style=filled]
+	EVAL [label="Evaluation Suite
+(Metrics & Diagnostics)" fillcolor="#43a047" fontsize=16 shape=component style=filled]
+	EXP_TRACK [label="Experiment Tracker
+(Hyperparam & Results)" fillcolor="#43a047" fontsize=16 shape=component style=filled]
+	ALLOC [label="Portfolio Allocator
+(Constraints & Weights)" fillcolor="#42a5f5" fontsize=16 shape=box style="filled,rounded"]
+	BACKTEST [label="Backtesting Engine
+(Transaction Costs, Slippage)" fillcolor="#42a5f5" fontsize=16 shape=box style="filled,rounded"]
+	RESULTS_DB [label="Results Database
+(Allocations & Metrics)" fillcolor="#90caf9" fontsize=16 shape=cylinder style=filled]
+	MONITOR [label="Pipeline Monitoring Dashboard" fillcolor="#c62828" fontsize=14 shape=note style=filled]
+	DATA_CATALOG [label="Data Catalog & Lineage" fillcolor="#c62828" fontsize=14 shape=note style=filled]
+	SECURITY [label="Access Control & Security" fillcolor="#c62828" fontsize=14 shape=note style=filled]
+	YF -> RAW_DB [label=Scrape color="#1976d2" penwidth=2]
+	FRED -> RAW_DB [label="API Call" color="#1976d2" penwidth=2]
+	RAW_DB -> ORCH [color="#42a5f5" penwidth=2]
+	ORCH -> CLEAN [color="#42a5f5" penwidth=2]
+	CLEAN -> AUDIT [color="#c62828" penwidth=1 style=dashed]
+	CLEAN -> TECH_IND [color="#42a5f5" penwidth=2]
+	CLEAN -> MACRO_JOIN [color="#42a5f5" penwidth=2]
+	TECH_IND -> FEAT_STORE [color="#90caf9" penwidth=2]
+	MACRO_JOIN -> FEAT_STORE [color="#90caf9" penwidth=2]
+	FEAT_STORE -> FEAT_SEL [color="#fbc02d" penwidth=2]
+	FEAT_SEL -> SCALE [color="#42a5f5" penwidth=2]
+	SCALE -> PCA [label="Linear DR" color="#42a5f5" penwidth=2]
+	SCALE -> AE [label="Nonlinear DR" color="#42a5f5" penwidth=2]
+	PCA -> HYBRID_FEAT [color="#42a5f5" penwidth=2]
+	AE -> HYBRID_FEAT [color="#42a5f5" penwidth=2]
+	SCALE -> TRAIN_ENG [label="Full Features" color="#43a047" penwidth=2]
+	HYBRID_FEAT -> TRAIN_ENG [label="Reduced Features" color="#43a047" penwidth=2]
+	TRAIN_ENG -> MODEL_REG [color="#90caf9" penwidth=2]
+	TRAIN_ENG -> EVAL [color="#43a047" penwidth=2]
+	TRAIN_ENG -> EXP_TRACK [color="#43a047" penwidth=2]
+	EVAL -> ALLOC [color="#42a5f5" penwidth=2]
+	ALLOC -> BACKTEST [color="#42a5f5" penwidth=2]
+	BACKTEST -> RESULTS_DB [color="#90caf9" penwidth=2]
+	RESULTS_DB -> MONITOR [color="#c62828" penwidth=1 style=dashed]
+	RESULTS_DB -> DATA_CATALOG [color="#c62828" penwidth=1 style=dashed]
+	RESULTS_DB -> SECURITY [color="#c62828" penwidth=1 style=dashed]
+	MONITOR -> ORCH [color="#c62828" penwidth=1 style=dashed]
+	DATA_CATALOG -> FEAT_STORE [color="#c62828" penwidth=1 style=dashed]
+	SECURITY -> RAW_DB [color="#c62828" penwidth=1 style=dashed]
+	subgraph cluster_data_sources {
+		label="Data Acquisition & Storage" style=dashed
+		YF
+		FRED
+		RAW_DB
+	}
+	subgraph cluster_preprocessing {
+		label="Data Orchestration & Preprocessing" style=dashed
+		ORCH
+		CLEAN
+		AUDIT
+	}
+	subgraph cluster_feature_eng {
+		label="Feature Engineering & Storage" style=dashed
+		TECH_IND
+		MACRO_JOIN
+		FEAT_STORE
+	}
+	subgraph cluster_feature_sel {
+		label="Feature Selection & Scaling" style=dashed
+		FEAT_SEL
+		SCALE
+	}
+	subgraph cluster_dim_red {
+		label="Dimensionality Reduction" style=dashed
+		PCA
+		AE
+		HYBRID_FEAT
+	}
+	subgraph cluster_modeling {
+		label="Model Training & Evaluation" style=dashed
+		TRAIN_ENG
+		MODEL_REG
+		EVAL
+		EXP_TRACK
+	}
+	subgraph cluster_portfolio {
+		label="Portfolio Construction & Backtesting" style=dashed
+		ALLOC
+		BACKTEST
+		RESULTS_DB
+	}
+	subgraph cluster_monitoring {
+		label="Monitoring & Governance" style=dashed
+		MONITOR
+		DATA_CATALOG
+		SECURITY
+	}
+	fontsize=24 label="Comprehensive Portfolio Optimization Pipeline
+Data Acquisition to Model Training and Governance" labelloc=t
+}

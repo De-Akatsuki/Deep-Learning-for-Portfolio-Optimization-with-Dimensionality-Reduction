@@ -1,0 +1,112 @@
+
+digraph CNN_LSTM_PCA_Pipeline {
+    rankdir=LR;
+    bgcolor="#FFFFFF";
+    splines=true;
+    nodesep=1.2;
+    ranksep=1.2;
+
+    node [shape=box, style="filled,rounded", color="#34495E", fontname="Helvetica Bold", fontsize=20, fontcolor="#2C3E50", penwidth=3, fixedsize=false, width=3.5, height=1.5];
+
+    // Input data node
+    Data [label=<
+        <b>Raw Financial Data</b><br/>
+        (Pivoted Features, Dates × Assets)
+        >,
+        fillcolor="#FFD966",
+        color="#CCAA44"
+    ];
+
+    // PCA node
+    PCA [label=<
+        <b>Feature Standardization & PCA</b><br/>
+        (Reduce to 7 Components)
+        >,
+        fillcolor="#99CCFF",
+        color="#3366CC"
+    ];
+
+    // Dynamic risk-parity target weights
+    Targets [label=<
+        <b>Dynamic Risk-Parity Target Weights</b><br/>
+        (Rolling Window=30)
+        >,
+        fillcolor="#99FFCC",
+        color="#33AA66"
+    ];
+
+    // Sequence preparation
+    Sequences [label=<
+        <b>Sequence Preparation</b><br/>
+        (Window Size = 30 Timesteps)
+        >,
+        fillcolor="#FFBBBB",
+        color="#CC4444"
+    ];
+
+    // CNN layer
+    CNN [label=<
+        <b>1D CNN Layer</b><br/>
+        Filters=32, Kernel=3, Padding=1
+        >,
+        fillcolor="#FFD966",
+        color="#CC7722"
+    ];
+
+    // MaxPooling layer
+    MaxPool [label=<
+        <b>MaxPooling 1D</b><br/>
+        Kernel=2
+        >,
+        fillcolor="#FFCC77",
+        color="#CC9933"
+    ];
+
+    // LSTM layer
+    LSTM [label=<
+        <b>LSTM Layer</b><br/>
+        Hidden Size=64
+        >,
+        fillcolor="#99CC99",
+        color="#339933"
+    ];
+
+    // Dense + Dropout block
+    DenseDropout [label=<
+        <b>Dense + Dropout</b><br/>
+        Dense=64 Units, Dropout=0.3
+        >,
+        fillcolor="#CC99CC",
+        color="#993399"
+    ];
+
+    // Output heads
+    SharpeOut [label=<
+        <b>Sharpe Ratio Output</b><br/>
+        (Regression)
+        >,
+        shape=ellipse, fillcolor="#FFFF99", color="#CCCC33", fontcolor="#666600", penwidth=3
+    ];
+
+    WeightOut [label=<
+        <b>Portfolio Weights Output</b><br/>
+        (Softmax Normalized)
+        >,
+        shape=ellipse, fillcolor="#CCFFCC", color="#33AA33", fontcolor="#226622", penwidth=3
+    ];
+
+    // Edges showing flow
+    Data -> PCA [penwidth=3, color="#6666CC", label="Standardize & PCA"];
+    PCA -> Sequences [penwidth=3, color="#3399FF", label="Create Sequences"];
+    Targets -> Sequences [penwidth=3, style=dashed, color="#33AA66", label="Supervised Targets"];
+
+    Sequences -> CNN [penwidth=3, color="#FF8800"];
+    CNN -> MaxPool [penwidth=3, color="#FFAA33"];
+    MaxPool -> LSTM [penwidth=3, color="#88CC44"];
+    LSTM -> DenseDropout [penwidth=3, color="#AA66CC"];
+
+    DenseDropout -> SharpeOut [penwidth=3, color="#CCCC33", label="Sharpe Ratio"];
+    DenseDropout -> WeightOut [penwidth=3, color="#33AA33", label="Portfolio Weights"];
+
+    {rank=same; CNN; MaxPool;}
+}
